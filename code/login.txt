@@ -1,0 +1,35 @@
+import XLUtils
+import openpyxl
+
+from selenium import webdriver
+
+driver = webdriver.Chrome(executable_path="c:/se/Chromedriver.exe")
+
+driver.get("file:///C:/Users/HP/Desktop/git/blog_update1-2.0/login.html")
+driver.maximize_window()
+
+path = "C:/Users/HP/Desktop/seleniumupdated.xlsx"
+
+workbook = openpyxl.load_workbook(path)
+
+sheet = workbook.active
+
+rows = XLUtils.getRowCount(path, 'login')
+
+for r in range(2, rows + 1):
+    email = XLUtils.readData(path, "login", r, 1)
+    password = XLUtils.readData(path, "login", r, 2)
+
+    driver.find_element_by_id("inputEmail").send_keys(email)
+
+    driver.find_element_by_name("inputPassword").send_keys(password)
+
+    driver.find_element_by_link_text("LOGIN").click()
+
+    if driver.title == "Error Page":
+        print("test passed")
+    else:
+        print("test failed")
+
+driver.find_element_by_link_text("login").click()
+

@@ -1,0 +1,35 @@
+import XLUtils
+import openpyxl
+
+from selenium import webdriver
+
+driver = webdriver.Chrome(executable_path="c:/se/Chromedriver.exe")
+driver.get("file:///C:/Users/HP/Desktop/git/blog_update1-2.0/signup.html")
+driver.maximize_window()
+path = "C:/Users/HP/Desktop/seleniumupdated.xlsx"
+
+workbook = openpyxl.load_workbook(path)
+
+sheet = workbook.active
+
+rows = XLUtils.getRowCount(path, 'sign')
+
+for r in range(2, rows + 1):
+    email = XLUtils.readData(path, "sign", r, 1)
+    password = XLUtils.readData(path, "sign", r, 2)
+    confirm = XLUtils.readData(path, "sign", r, 3)
+
+    driver.find_element_by_name("inputEmail").send_keys(email)
+    driver.find_element_by_name("password").send_keys(password)
+    driver.find_element_by_name("conpassword").send_keys(confirm)
+    driver.find_element_by_id("myBtn").click()
+
+    if driver.title == "OurApphomepage":
+        print("test is passed")
+        XLUtils.writeData(path, "sign", r, 4, "test Passed")
+
+    else:
+        print("test failed")
+        XLUtils.writeData(path, "sign", r, 4, "test failed")
+
+    driver.find_element_by_link_text("get started").click()

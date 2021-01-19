@@ -1,0 +1,30 @@
+import XLUtils
+import openpyxl
+from selenium import webdriver
+driver = webdriver.Chrome(executable_path="c:/se/Chromedriver.exe")
+driver.get("file:///C:/Users/HP/Desktop/git/blog_update1-2.0/editprofile.html")
+driver.maximize_window()
+path = "C:/Users/HP/Desktop/seleniumupdated.xlsx"
+workbook = openpyxl.load_workbook(path)
+sheet = workbook.active
+rows = XLUtils.getRowCount(path, 'edit')
+for r in range(2, rows + 1):
+    name = XLUtils.readData(path, "edit", r, 1)
+    username = XLUtils.readData(path, "edit", r, 2)
+    bio = XLUtils.readData(path, "edit", r, 3)
+
+    driver.find_element_by_name("name").send_keys(name)
+    driver.find_element_by_name("username").send_keys(username)
+    driver.find_element_by_id("bio").send_keys(bio)
+    driver.find_element_by_link_text("Save Changes").click()
+
+    if driver.title == "OurApp":
+        print("test passed")
+    else:
+        print("test failed")
+    while 1:
+        try:
+            driver.find_element_by_link_text(" Edit Profile").click()
+            break
+        except:
+            continue
